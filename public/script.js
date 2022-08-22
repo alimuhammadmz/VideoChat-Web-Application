@@ -54,4 +54,4 @@ function addVideoStream(video, stream) {
       video.play()
     })
     videoGrid.append(video)
-  }
+}

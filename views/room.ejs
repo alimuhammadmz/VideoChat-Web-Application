@@ -6,8 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting room</title>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+      (function(){
+          emailjs.init("pgjPwC9yKk0Zqysmn");
+      })();
+    </script>
+
     <script>
-        const ROOM_ID = "<%= roomId %>"
+      var userName;
+      const ROOM_ID = "<%= roomId %>"
     </script>
 
     <script defer src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>   <!-- including peerjs library-->
@@ -36,8 +52,93 @@
         <h4>Meeting ID: <%= roomId%></h4><br>
     </div>
     
+    <!-- modal for name input -->
+    <div class="modal show" id="myModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content" style="color: black;">
+          <div class="modal-header">
+            <h4 class="modal-title">Joining Information</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            Your Name <input id="user-name" type="text"><br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" onclick="setPersonInfo()" class="btn btn-default" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal for name input -->
+    
+    <!-- modal shows as window loads -->
+    <script>
+      $('.modal').modal('show');
+    </script>
+
     <div id="video-grid">
 
     </div>
+
+    <button type="button" style="float: right; margin: 19rem 1rem 1rem 0px;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Share Meeting Link</button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" style="color: black;" id="exampleModalCenterTitle">Send invitation Link</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="color: black;">
+            <h5>Enter E-mail of the attendees <br> (in comma separated form)</h5> <br><br>
+            <input id="email-attendees" type="text">
+          </div>
+
+          <script>
+              var emailAttendees = document.getElementById('email-attendees');;
+              function setPersonInfo(){
+                const user = document.querySelector('#user-name');
+                userName = user.value; 
+              }
+              function shareMeeting(){                                                //take input of existing room id or nickname              
+                if(!userName)
+                  userName = "Meeting Host"
+                
+                if(!emailAttendees.value){
+                  alert('Enter at least one email address to send invitation!');
+                }else{
+                  receiver_name = emailAttendees.value;
+                  receiver_name = receiver_name.split("@")[0];
+                
+                  //send invitation link
+                  var templateParams = {
+                    from_name: userName,
+                    to_name: receiver_name,
+                    message: `Click on the given link to join the meeting: http://localhost:3000/${ROOM_ID}`
+                  };
+                  emailjs.send('service_wm217ua', 'template_h2l2u3v', templateParams)   //sending email via npm's emailjs
+                      .then(function(response) {
+                        console.log('SUCCESS!', response.status, response.text);
+                      }, function(error) {
+                        console.log('FAILED...', error);
+                      });
+                    }
+                  }
+          </script>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="shareMeeting()" data-dismiss="modal">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal for input link -->
+
 </body>
 </html>
