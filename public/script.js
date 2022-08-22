@@ -45,7 +45,8 @@ __peer.on('open', userId=>{
 })
 
 socket.on('user-disconnected', userId => {
-    if (peers[userId]) peers[userId].close()
+    if (peers[userId])
+        peers[userId].close()
 })
 
 function addVideoStream(video, stream) {
