@@ -20,9 +20,6 @@
 
 <body style="background-image: url('/welcome-Img.jpg'); background-size: cover; color: aliceblue;">
     <h1 style="text-align: center; font: italic small-caps bold 40px/2 cursive;">Create and Join Meetings with us!</h1>
-    <script>
-
-    </script>
 
     <button id="create-button" onclick="location.href = 'create';" style="float: right; margin: 38rem 1rem 1rem 0px;" type="button" class="btn btn-primary">Create Meeting</button>
     <button id="join-button" onclick="" style="float: right; margin: 38rem 1rem 1rem 0px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">Join Meeting</button>
@@ -32,22 +29,33 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" style="color: black;" id="exampleModalCenterTitle">Enter existing room</h5>
+              <h5 class="modal-title" style="color: black;" id="exampleModalCenterTitle">Enter existing room or meeting Nickname</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body" style="color: black;">
-              Room ID  <input id="room-Id" type="text">
+              Room ID  <input id="room-link" type="text">
             </div>
+
+            <script>
+                var roomId;
+                var roomLink = document.getElementById('room-link');;
+        
+                function joinRoomWithId(){                    //take input of existing room id or nickname
+                    roomId = roomLink.value;
+                    roomLink.value = "";
+                    window.location=`./${roomId}`;
+                }
+            </script>
+
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onclick="">Save changes</button>
+              <button type="button" class="btn btn-primary" onclick="joinRoomWithId()">Save changes</button>
             </div>
           </div>
         </div>
       </div>
       <!-- modal for input link -->
-
 </body>
 </html>
