@@ -112,23 +112,28 @@
                 if(!emailAttendees.value){
                   alert('Enter at least one email address to send invitation!');
                 }else{
-                  receiver_name = emailAttendees.value;
-                  receiver_name = receiver_name.split("@")[0];
-                
-                  //send invitation link
-                  var templateParams = {
-                    from_name: userName,
-                    to_name: receiver_name,
-                    message: `Click on the given link to join the meeting: http://localhost:3000/${ROOM_ID}`
-                  };
-                  emailjs.send('service_wm217ua', 'template_h2l2u3v', templateParams)   //sending email via npm's emailjs
-                      .then(function(response) {
-                        console.log('SUCCESS!', response.status, response.text);
-                      }, function(error) {
-                        console.log('FAILED...', error);
-                      });
-                    }
-                  }
+                  var invitees = emailAttendees.value;
+                  invitees = invitees.split(",");
+
+                  invitees.forEach(element => {
+                    receiver_name = element;
+                    receiver_name = receiver_name.split("@")[0];
+                  
+                    //send invitation link
+                    var templateParams = {
+                      from_name: userName,
+                      to_name: receiver_name.toUpperCase(),
+                      message: `Click on the given link to join the meeting: http://localhost:3000/${ROOM_ID}`
+                    };
+                    emailjs.send('service_wm217ua', 'template_h2l2u3v', templateParams)   //sending email via npm's emailjs
+                        .then(function(response) {
+                          console.log('SUCCESS!', response.status, response.text);
+                        }, function(error) {
+                          console.log('FAILED...', error);
+                        });
+                  })
+                }
+              }
           </script>
 
           <div class="modal-footer">
